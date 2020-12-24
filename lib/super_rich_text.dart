@@ -181,7 +181,7 @@ class SuperRichText extends StatelessWidget {
         ),
         super(key: key);
 
-  List<TextSpan> getTextSpanList(){
+  List<InlineSpan> getTextSpanList(){
 
     int i= 0;
     final List<String> normalTexts =
