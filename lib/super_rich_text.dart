@@ -181,7 +181,7 @@ class SuperRichText extends StatelessWidget {
         ),
         super(key: key);
 
-  List<InlineSpan> getSpanList(){
+  TextSpan getTSpan (BuildContext context){
 final List<MarkerText> allMarkers = [];
     allMarkers.addAll(othersMarkers);
 
@@ -242,7 +242,9 @@ final List<MarkerText> allMarkers = [];
       }
     });
 
-    return finalList;
+    return TextSpan(
+            children: finalList,
+            style: style ?? DefaultTextStyle.of(context).style);
   }
 
   TextSpan getTextSpan(
