@@ -181,9 +181,43 @@ class SuperRichText extends StatelessWidget {
         ),
         super(key: key);
 
-  List<InlineSpan> getTextSpanList(){
+  List<InlineSpan> getSpanList(){
+final List<MarkerText> allMarkers = [];
+    allMarkers.addAll(othersMarkers);
 
-    int i= 0;
+    if (useGlobalMarkers) {
+      allMarkers.addAll(globalMarkerTexts);
+    }
+
+    allMarkers.forEach((v) {
+      final String m = v.marker;
+      final String pattern = "\\$m.*?\\$m";
+      final String pattern2 = "$m.*?$m";
+      final List<RegExpMatch> found = RegExp(pattern).allMatches(text).toList();
+
+      insertValues(
+          found: () {
+            if (found.length > 0) {
+              return found;
+            }
+
+            try {
+              return RegExp(pattern2).allMatches(this.text).toList();
+            } catch (msg) {
+              return <RegExpMatch>[];
+            }
+          }(),
+          pattern: found.length > 0 ? pattern : pattern2,
+          marker: v);
+    });
+
+    try {
+      toSplit = toSplit.substring(0, toSplit.length - 1);
+    } catch (msg) {
+      //ignored
+
+    }
+
     final List<String> normalTexts =
         toSplit != '' ? text.split(RegExp(toSplit)) : [text];
 
@@ -195,6 +229,7 @@ class SuperRichText extends StatelessWidget {
             .toList()
         : [];
 
+    int i = 0;
     final List<TextSpan> finalList = [];
     normalTexts.forEach((v) {
       finalList.add(TextSpan(text: v));
@@ -206,6 +241,7 @@ class SuperRichText extends StatelessWidget {
 
       }
     });
+
     return finalList;
   }
 
