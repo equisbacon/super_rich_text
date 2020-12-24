@@ -181,6 +181,34 @@ class SuperRichText extends StatelessWidget {
         ),
         super(key: key);
 
+  List<TextSpan> getTextSpanList(){
+
+    int i= 0;
+    final List<String> normalTexts =
+        toSplit != '' ? text.split(RegExp(toSplit)) : [text];
+
+    final List<String> inSequence = toSplit != ''
+        ? RegExp(toSplit)
+            .allMatches(text)
+            .toList()
+            .map((v) => v.group(0))
+            .toList()
+        : [];
+
+    final List<TextSpan> finalList = [];
+    normalTexts.forEach((v) {
+      finalList.add(TextSpan(text: v));
+
+      try {
+        finalList.add(texts[inSequence[i++]]);
+      } catch (msg) {
+        //ignored
+
+      }
+    });
+    return finalList;
+  }
+
   TextSpan getTextSpan(
       {@required RegExpMatch regex, @required MarkerText marker, int index}) {
     return TextSpan(
